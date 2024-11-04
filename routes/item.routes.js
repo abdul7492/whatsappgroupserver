@@ -22,6 +22,7 @@ router.get('/category/:categoryName', getItemsByCategory);
 router.get('/search/:query', getItemsBySearch);
 
 router.get('/free', getfreeItem );
+
 // Route to fetch a single item by ID
 router.get('/:id', getItem);
 

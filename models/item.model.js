@@ -22,6 +22,7 @@ const itemSchema = new mongoose.Schema({
     image1: { type: String }, // URL for image 1
     image2: { type: String }, // URL for image 2
     image3: { type: String }, // URL for image 3
+    linkname: { type: String},
 }, { timestamps: true });
 
 const Item = mongoose.model('Item', itemSchema);

@@ -101,6 +101,7 @@ export const addItem = async (req, res) => {
     const imageUrls = await uploadMultipleToCloudinary(req.files.map(file => file.path));
 
     const newItem = new Item({
+      linkname: req.body.lname,
       name: req.body.name,
       price: req.body.price,
       fullprice: req.body.fullprice,
@@ -147,6 +148,7 @@ export const updateItem = async (req, res) => {
 
     // Construct updatedData, conditionally adding fields based on what was provided
     const updatedData = {
+      linkname: req.body.lname || existingItem.linkname,
       name: req.body.name || existingItem.name,
       price: req.body.price || existingItem.price,
       fullprice: req.body.fullprice || existingItem.fullprice,
