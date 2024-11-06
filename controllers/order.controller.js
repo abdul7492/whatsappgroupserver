@@ -1,6 +1,6 @@
 import Order from '../models/order.model.js';
 import Item from '../models/item.model.js';
-import { uploadToCloudinary } from '../utils/cloudinary.js'; 
+import { uploadToCloudinary } from '../utils/cloudinary.js';
 
 
 export const addToCart = async (req, res) => {
@@ -22,18 +22,17 @@ export const addToCart = async (req, res) => {
         (cartItem) =>
           cartItem.item.toString() === item
       );
-  
+
       if (existingItem) {
-        return res.status(200).json({message: 'Item already exists in the cart'});
+        return res.status(200).json({ message: 'Item already exists in the cart' });
       }
-      else
-      {
-          iorder.items.push({ item, language, quality });
-          iorder.totalPrice += price;
+      else {
+        iorder.items.push({ item, language, quality });
+        iorder.totalPrice += price;
       }
-    
+
     }
-  
+
     const savedOrder = await iorder.save();
     res.status(200).json({ message: 'Item added to cart', order: savedOrder, token: savedOrder._id });
   } catch (error) {
@@ -50,7 +49,7 @@ export const getUserOrders = async (req, res) => {
     if (!token) {
       return res.status(401).json({ message: 'Token not provided' });
     }
- 
+
 
     const orders = await Order.find({ _id: token }).populate('items.item');
     // const orders = await Order.find({ status: 'pending' }).populate('items.item');
@@ -73,27 +72,16 @@ export const getUserOrders = async (req, res) => {
 
 export const removeItemFromCart = async (req, res) => {
   try {
-    const { orderId, itemId } = req.params; 
+    const { orderId, itemId } = req.params;
 
     const order = await Order.findById(orderId).populate('items.item');
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    // Filter out the item to be removed
-    const itemInOrder = order.items.find(orderItem => orderItem.item._id.toString() === itemId);
-    const item = await Item.findById(itemInOrder.item._id);
-    if(item.availableFormats === "4K")
-    {
-      order.totalPrice = order.totalPrice - item.fullprice;
-    }
-    else
-    {
-      order.totalPrice = order.totalPrice - item.price;
-    }
-    
+    // Filter out the item to be removed    
     const updatedItems = order.items.filter(itemObj => itemObj.item._id.toString() !== itemId);
-  
+
     if (updatedItems.length === 0) {
       // If no items left, delete the order
       await Order.findByIdAndDelete(orderId);
@@ -102,20 +90,24 @@ export const removeItemFromCart = async (req, res) => {
 
     // Update the items and recalculate the total price
     order.items = updatedItems;
-  //   order.items.forEach(item => {
-  //     item.language = language;
-  // });
-  // for (const orderItem of order.items) {
-  //   const item = await Item.findById(orderItem.item._id);
-  //   if (item) {
-  //       orderItem.item.fullprice = item.fullprice;
-  //       totalPrice += item.fullprice; // Add to total price
-  //   }
-  //  }
+
+    for (const orderItem of order.items) {
+      const item = await Item.findById(orderItem.item._id);
+      if (item) {
+        orderItem.item.fullprice = item.fullprice;
+        totalPrice += item.fullprice;
+        if (item.availableFormats === "4K") {
+          order.totalPrice = order.totalPrice - item.fullprice;
+        }
+        else {
+          order.totalPrice = order.totalPrice - item.price;
+        }
+      }
+    }
 
 
-   // order.totalPrice = updatedItems.reduce((total, itemObj) => total + itemObj.item.price, 0);
-    
+    // order.totalPrice = updatedItems.reduce((total, itemObj) => total + itemObj.item.price, 0);
+
     const savedOrder = await order.save(); // Save the updated order
     res.status(200).json({ message: 'Item removed from cart successfully', order: savedOrder });
   } catch (error) {
@@ -128,7 +120,7 @@ export const removeItemFromCart = async (req, res) => {
 
 export const checkoutOrder = async (req, res) => {
   const { whhtnum } = req.body;
-  const token = req.headers.authorization?.split(' ')[1]; 
+  const token = req.headers.authorization?.split(' ')[1];
   try {
     let imageUrl = null;
 
@@ -136,7 +128,7 @@ export const checkoutOrder = async (req, res) => {
       imageUrl = await uploadToCloudinary(req.file.path); // Upload to Cloudinary only if file exists
     }
     let iorder = await Order.findOne({ _id: token, status: 'pending' });
-  
+
     // let iorder = await Order.findOne({ user: userId, status: 'pending' });
     if (!iorder) {
       return res.status(404).json({ message: 'No pending order found' });
@@ -145,10 +137,10 @@ export const checkoutOrder = async (req, res) => {
     iorder.status = 'confirmed';
     iorder.whnum = whhtnum;
     if (imageUrl) {
-      iorder.image = imageUrl; 
-    } 
+      iorder.image = imageUrl;
+    }
 
-  
+
     // Save the updated order to the database
     await iorder.save();
 
@@ -181,10 +173,9 @@ export const setstatus = async (req, res) => {
     }
     iorder.status = status;
     await iorder.save();
-    res.status(200).json({ message: 'Item added to cart'});
+    res.status(200).json({ message: 'Item added to cart' });
   } catch (error) {
     console.error('Error adding to cart:', error);
     res.status(500).json({ message: 'Internal server error', error });
   }
 };
-  
