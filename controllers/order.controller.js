@@ -94,8 +94,6 @@ export const removeItemFromCart = async (req, res) => {
     for (const orderItem of order.items) {
       const item = await Item.findById(orderItem.item._id);
       if (item) {
-        orderItem.item.fullprice = item.fullprice;
-        totalPrice += item.fullprice;
         if (item.availableFormats === "4K") {
           order.totalPrice = order.totalPrice - item.fullprice;
         }
