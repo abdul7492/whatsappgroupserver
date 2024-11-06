@@ -24,7 +24,7 @@ router.get('/search/:query', getItemsBySearch);
 router.get('/free', getfreeItem );
 
 // Route to fetch a single item by ID
-router.get('/:id', getItem);
+router.get('/:lname', getItem);
 
 // Route to add a new item with image uploads
 router.post('/add', upload, handleMulterError, addItem);
