@@ -69,7 +69,6 @@ export const getUserOrders = async (req, res) => {
 };
 
 
-
 export const removeItemFromCart = async (req, res) => {
   try {
     const { orderId, itemId } = req.params;
@@ -91,20 +90,18 @@ export const removeItemFromCart = async (req, res) => {
     // Update the items and recalculate the total price
     order.items = updatedItems;
     order.totalPrice = 0;
+    
     for (const orderItem of order.items) {
       const item = await Item.findById(orderItem.item._id);
       if (item) {
-        if (item.availableFormats === "4K") {
+        // Check if '4K' is present in the availableFormats array
+        if (item.availableFormats.includes("4K")) {
           order.totalPrice = order.totalPrice - item.fullprice;
-        }
-        else {
+        } else {
           order.totalPrice = order.totalPrice - item.price;
         }
       }
     }
-
-
-    // order.totalPrice = updatedItems.reduce((total, itemObj) => total + itemObj.item.price, 0);
 
     const savedOrder = await order.save(); // Save the updated order
     res.status(200).json({ message: 'Item removed from cart successfully', order: savedOrder });
@@ -113,6 +110,7 @@ export const removeItemFromCart = async (req, res) => {
     res.status(500).json({ message: 'Error removing item from cart', error });
   }
 };
+
 
 
 
