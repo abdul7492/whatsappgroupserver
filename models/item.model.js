@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    linkname: { type: String, unique: true },
     price: { type: Number, required: true, min: 0 },
     fullprice: { type: Number, required: true, min: 0 },
     popularity: { type: Number, default: 0 },
