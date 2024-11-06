@@ -101,6 +101,7 @@ export const addItem = async (req, res) => {
 
     const newItem = new Item({
       name: req.body.name,
+      linkname: req.body.lname,
       price: req.body.price,
       fullprice: req.body.fullprice,
       rating: req.body.rating,
@@ -147,6 +148,7 @@ export const updateItem = async (req, res) => {
     // Construct updatedData, conditionally adding fields based on what was provided
     const updatedData = {
       name: req.body.name || existingItem.name,
+      linkname: req.body.lname || existingItem.linkname,
       price: req.body.price || existingItem.price,
       fullprice: req.body.fullprice || existingItem.fullprice,
       rating: req.body.rating || existingItem.rating,
