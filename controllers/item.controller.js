@@ -16,7 +16,7 @@ export const getItems = async (req, res) => {
 export const getItem = async (req, res) => {
   try {
     const { lname } = req.params;
-    const item = await Item.find({ linkname: { $regex: lname, $options: 'i' } });
+    const item = await Item.findOne({ linkname: { $regex: lname, $options: 'i' } });
     if (!item) return res.status(404).json({ message: 'Item not found' });
     item.popularity= item.popularity + 1;
     await item.save();
