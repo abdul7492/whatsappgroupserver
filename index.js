@@ -11,7 +11,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: 'https://snapmoviehd.com', credentials: true })); // Allow requests from frontend
+app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // Allow requests from frontend
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
