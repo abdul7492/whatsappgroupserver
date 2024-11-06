@@ -83,7 +83,7 @@ export const removeItemFromCart = async (req, res) => {
     // Filter out the item to be removed
     const itemInOrder = order.items.find(orderItem => orderItem.item._id.toString() === itemId);
     const item = await Item.findById(itemInOrder.item._id);
-    if(item.quality === '4K')
+    if(item.availableFormats === '4K')
     {
       order.totalPrice = order.totalPrice - item.fullprice;
     }
