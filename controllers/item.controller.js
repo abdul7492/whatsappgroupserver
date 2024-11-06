@@ -15,8 +15,8 @@ export const getItems = async (req, res) => {
 
 export const getItem = async (req, res) => {
   try {
-    const { id } = req.params;
-    const item = await Item.findById(id).populate('category'); 
+    const { lname } = req.params;
+    const item = await Item.find({ linkname: { $regex: lname, $options: 'i' } });
     if (!item) return res.status(404).json({ message: 'Item not found' });
     item.popularity= item.popularity + 1;
     await item.save();
