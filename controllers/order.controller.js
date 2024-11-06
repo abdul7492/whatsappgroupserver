@@ -90,7 +90,7 @@ export const removeItemFromCart = async (req, res) => {
 
     // Update the items and recalculate the total price
     order.items = updatedItems;
-
+    order.totalPrice = 0;
     for (const orderItem of order.items) {
       const item = await Item.findById(orderItem.item._id);
       if (item) {
