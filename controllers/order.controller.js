@@ -90,7 +90,13 @@ export const removeItemFromCart = async (req, res) => {
 
     // Update the items and recalculate the total price
     order.items = updatedItems;
-    order.totalPrice = updatedItems.reduce((total, itemObj) => total + itemObj.item.price, 0);
+    let itmprice = updatedItems.price;
+    if(updatedItems.quality === '4K')
+    {
+      itmprice = updatedItems.totalPrice;
+    }
+    order.totalPrice = order.totalPrice - itmprice;
+   // order.totalPrice = updatedItems.reduce((total, itemObj) => total + itemObj.item.price, 0);
     
     const savedOrder = await order.save(); // Save the updated order
     res.status(200).json({ message: 'Item removed from cart successfully', order: savedOrder });
