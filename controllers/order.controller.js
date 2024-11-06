@@ -29,7 +29,7 @@ export const addToCart = async (req, res) => {
       else
       {
           iorder.items.push({ item, language, quality });
-          iorder.totalPrice += price;
+          iorder.totalPrice = iorder.totalPrice + price;
       }
     
     }
