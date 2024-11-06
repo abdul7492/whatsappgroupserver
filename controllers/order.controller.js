@@ -1,4 +1,5 @@
 import Order from '../models/order.model.js';
+import Item from '../models/item.model.js';
 import { uploadToCloudinary } from '../utils/cloudinary.js'; 
 
 
@@ -80,8 +81,19 @@ export const removeItemFromCart = async (req, res) => {
     }
 
     // Filter out the item to be removed
+    const itemInOrder = order.items.find(orderItem => orderItem.item._id.toString() === itemId);
+    const item = await Item.findById(itemInOrder.item._id);
+    if(item.quality === '4K')
+    {
+      order.totalPrice = order.totalPrice - item.fullprice;
+    }
+    else
+    {
+      order.totalPrice = order.totalPrice - item.price;
+    }
+    
     const updatedItems = order.items.filter(itemObj => itemObj.item._id.toString() !== itemId);
-
+  
     if (updatedItems.length === 0) {
       // If no items left, delete the order
       await Order.findByIdAndDelete(orderId);
@@ -90,12 +102,18 @@ export const removeItemFromCart = async (req, res) => {
 
     // Update the items and recalculate the total price
     order.items = updatedItems;
-    let itmprice = updatedItems.price;
-    if(updatedItems.quality === '4K')
-    {
-      itmprice = updatedItems.totalPrice;
-    }
-    order.totalPrice = order.totalPrice - itmprice;
+  //   order.items.forEach(item => {
+  //     item.language = language;
+  // });
+  // for (const orderItem of order.items) {
+  //   const item = await Item.findById(orderItem.item._id);
+  //   if (item) {
+  //       orderItem.item.fullprice = item.fullprice;
+  //       totalPrice += item.fullprice; // Add to total price
+  //   }
+  //  }
+
+
    // order.totalPrice = updatedItems.reduce((total, itemObj) => total + itemObj.item.price, 0);
     
     const savedOrder = await order.save(); // Save the updated order

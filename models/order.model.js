@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema({
     whnum: { type: String},
     image: { type: String }, 
     status: { type: String, enum: ['pending', 'confirmed', 'delivered', 'cancelled'], default: 'pending' },
-   
+    
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
