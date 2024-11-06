@@ -29,9 +29,19 @@ export const addToCart = async (req, res) => {
       else
       {
           iorder.items.push({ item, language, quality });
-          iorder.totalPrice = iorder.totalPrice + price;
       }
     
+    }
+    iorder.totalPrice = 0;
+    for (const orderItem of iorder.items) {
+      const item = await Item.findById(orderItem.item._id);
+      if (item) {
+        if (orderItem.quality === "4K") {
+          iorder.totalPrice = iorder.totalPrice + item.fullprice;
+        } else {
+          iorder.totalPrice = iorder.totalPrice + item.price;
+        }
+      }
     }
   
     const savedOrder = await iorder.save();
