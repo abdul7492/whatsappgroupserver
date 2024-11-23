@@ -6,8 +6,8 @@ import {
   deleteItem,
   getItem,
   getItemsByCategory,
-  getfreeItem,
-  updateItemfree,
+  getsaleItem,
+  updatesaleItem,
   getItemsBySearch,
 } from '../controllers/item.controller.js'; // Adjust the path as necessary
 import { upload, handleMulterError } from '../middlewares/multer.middleware.js'; // Adjust the path as necessary
@@ -21,7 +21,7 @@ router.get('/category/:categoryName', getItemsByCategory);
 
 router.get('/search/:query', getItemsBySearch);
 
-router.get('/free', getfreeItem );
+router.get('/sale', getsaleItem );
 
 // Route to fetch a single item by ID
 router.get('/:lname', getItem);
@@ -29,7 +29,7 @@ router.get('/:lname', getItem);
 // Route to add a new item with image uploads
 router.post('/add', upload, handleMulterError, addItem);
 
-router.put('/setfree/:id', updateItemfree);
+router.put('/setsale/:id', updatesaleItem);
 // Route to update an existing item by ID with image uploads
 router.put('/:id', upload, handleMulterError, updateItem);
 

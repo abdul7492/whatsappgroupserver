@@ -7,17 +7,9 @@ const itemSchema = new mongoose.Schema({
     fullprice: { type: Number, required: true, min: 0 },
     popularity: { type: Number, default: 0 },
     rating: { type: Number, min: 0, max: 5, default: 0 },
-    releaseDate: { type: Date, required: true },
-    type: { type: String, enum: ['movie', 'series'], required: true },
-    language: [{ 
-        type: String,
-        enum: ['Hindi','Urdu', 'English', 'Both'],
-    }],
-    availableFormats: [{ 
-        type: String, 
-        enum: ['480p', '720p', '1080p', '4K'],
-    }],
-    isFreeToday: { type: Boolean, default: false },
+    size: [{ type: String, required: true }],
+    fits: {type: String, enum: ['XS','Small', 'Medium', 'Large', 'XL'], required: true},
+    isonsale: { type: Boolean, default: false },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     description: { type: String, required: true },
     image1: { type: String }, // URL for image 1

@@ -4,11 +4,11 @@ const orderSchema = new mongoose.Schema({
     isAdmin: { type: Boolean, default: false },
     items: [ {
         item: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
-        language: { type: String, required: true },
-        quality: { type: String, required: true },
     } ],
-    totalPrice: { type: Number, required: true },
+    name: { type: String},
     whnum: { type: String},
+    address: { type: String},
+    totalPrice: { type: Number, default: 0 },
     image: { type: String }, 
     status: { type: String, enum: ['pending', 'confirmed', 'delivered', 'cancelled'], default: 'pending' },
     
