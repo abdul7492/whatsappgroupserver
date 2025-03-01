@@ -13,18 +13,30 @@ export const getItems = async (req, res) => {
 };
 
 
+
+
 export const getItem = async (req, res) => {
-  try {
-    const { lname } = req.params;
-    const item = await Item.findOne({ linkname: { $regex: lname, $options: 'i' } });
-    if (!item) return res.status(404).json({ message: 'Item not found' });
-    item.popularity= item.popularity + 1;
-    await item.save();
-    res.status(200).json({ item });
-  } catch (error) {
-    console.error('Error fetching item:', error);
-    res.status(500).json({ error: 'Server error, could not fetch item.' });
-  }
+    try {
+        const { lname } = req.params;
+        const decodedLinkname = decodeURIComponent(lname); // Decode the linkname
+
+        // Find the item by linkname (case-insensitive search)
+        const item = await Item.findOne({ linkname: { $regex: decodedLinkname, $options: 'i' } });
+
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+
+        // Increment popularity and save
+        item.popularity += 1;
+        await item.save();
+
+        // Return the updated item
+        res.status(200).json({ item });
+    } catch (error) {
+        console.error('Error fetching item:', error);
+        res.status(500).json({ error: 'Server error, could not fetch item.' });
+    }
 };
 
 export const getsaleItem = async (req, res) => {
@@ -76,11 +88,11 @@ export const getItemsBySearch = async (req, res) => {
 
     // If no items found, return an appropriate message
     if (items.length === 0) {
-      return res.status(200).json({ message: 'No items found by search', items });
+      return res.status(200).json({ message: 'No Group found by search', items });
     }
 
     // Return the found items
-    res.status(200).json({ message: 'Items Search successfully', items });
+    res.status(200).json({ message: 'Group Search successfully', items });
   } catch (error) {
     console.error('Error fetching items by search query:', error);
     res.status(500).json({ message: 'Server error, could not fetch items' });
@@ -100,14 +112,14 @@ export const addItem = async (req, res) => {
 
     const newItem = new Item({
       name: req.body.name,
-      linkname: req.body.lname,
-      price: req.body.price,
-      fullprice: req.body.fullprice,
-      rating: req.body.rating,
-      size: req.body.size.split(',').map(lang => lang.trim()),
-      fits: req.body.fits,
+      linkname: req.body.whatsappgrouplink,
+      // price: req.body.price,
+      // fullprice: req.body.fullprice,
+      // rating: req.body.rating,
+      // size: req.body.size.split(',').map(lang => lang.trim()),
+      // fits: req.body.fits,
       category: categoryDoc._id,
-      description: req.body.description,
+      // description: req.body.description,
       image1: imageUrls[0], // Store first image URL
       image2: imageUrls[1], // Store second image URL
       image3: imageUrls[2], // Store third image URL
@@ -145,14 +157,14 @@ export const updateItem = async (req, res) => {
     // Construct updatedData, conditionally adding fields based on what was provided
     const updatedData = {
       name: req.body.name || existingItem.name,
-      linkname: req.body.lname || existingItem.linkname,
-      price: req.body.price || existingItem.price,
-      fullprice: req.body.fullprice || existingItem.fullprice,
-      rating: req.body.rating || existingItem.rating,
-      size: req.body.size ? req.body.size.split(',').map(lang => lang.trim()): existingItem.size,
-      fits: req.body.fits || existingItem.fits,
+      linkname: req.body.whatsappgrouplink || existingItem.linkname,
+      // price: req.body.price || existingItem.price,
+      // fullprice: req.body.fullprice || existingItem.fullprice,
+      // rating: req.body.rating || existingItem.rating,
+      // size: req.body.size ? req.body.size.split(',').map(lang => lang.trim()): existingItem.size,
+      // fits: req.body.fits || existingItem.fits,
       category: categoryDoc._id || existingItem.category,
-      description: req.body.description || existingItem.description,
+      // description: req.body.description || existingItem.description,
       image1: imageUrls[0] || existingItem.image1,
       image2: imageUrls[1] || existingItem.image2,
       image3: imageUrls[2] || existingItem.image3
