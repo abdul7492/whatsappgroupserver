@@ -32,8 +32,8 @@ setInterval(reloadWebsite, interval);
 
 // Allowed origins for CORS
 const allowedOrigins = [
-  'https://whatsappgrouplinks2025.snapmoviehd.com/',
-  'https://www.whatsappgrouplinks2025.snapmoviehd.com/',
+  'https://whatsappgrouplinks2025.snapmoviehd.com',
+  'https://www.whatsappgrouplinks2025.snapmoviehd.com',
   'http://localhost:3000'
 ];
 
