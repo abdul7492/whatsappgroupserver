@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 // URL and interval for reloading the website (preventing Render from sleeping)
-const url = `https://whatsappgroupserver.onrender.com`; // Replace with your Render backend URL
+const url = `https://whatsappgroupserver-6exb.onrender.com`; // Replace with your Render backend URL
 const interval = 30000; // 30 seconds
 
 // Function to reload the website periodically
