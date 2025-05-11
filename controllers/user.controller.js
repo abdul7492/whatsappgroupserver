@@ -25,18 +25,17 @@ export const getPlaninfo = async (req, res) => {
     const { amount } = req.params;
     const pAmount = parseInt(amount);
 
-    const todayStart = startOfDay(new Date());
-    const todayEnd = endOfDay(new Date());
 
     const entries = await User.find({
       planAmount: pAmount,
-      status: { $in: ['approved', 'pending'] },  // Match either 'approved' or 'pending'
-      date: { $gte: todayStart, $lte: todayEnd }
+      date: { $gte: startOfDay, $lte: endOfDay }
     });
+
 
     const participantCount = entries.length;
     const totalAmount = participantCount * pAmount;
     const payout = totalAmount * 0.975;
+
 
     res.json({ participantCount, totalAmount, payout });
   } catch (error) {
@@ -44,6 +43,7 @@ export const getPlaninfo = async (req, res) => {
     res.status(500).json({ error: 'Server error, could not fetch plan info.' });
   }
 };
+
 
     
 
@@ -83,7 +83,6 @@ export const setwinner = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { isWinner: !user.isWinner },
-      { new: true }
     );
 
     res.json({
@@ -94,38 +93,7 @@ export const setwinner = async (req, res) => {
     console.error('Error toggling winner status:', error);
     res.status(500).json({ error: 'Server error, could not toggle winner.' });
   }
-};
-
-// Set status (pending / approved / cancelled)
-export const setStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    // Check if status is valid
-    const validStatuses = ['pending', 'approved', 'cancelled'];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({ error: 'Invalid status value.' });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
-
-    res.json({ message: 'Status updated successfully.', user: updatedUser });
-  } catch (error) {
-    console.error('Error updating status:', error);
-    res.status(500).json({ error: 'Server error, could not update status.' });
-  }
-};
-
-  
+};  
  
   
   export const rest = async (req, res) => {
