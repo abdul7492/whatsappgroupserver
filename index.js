@@ -67,7 +67,7 @@ mongoose
 app.use('/api/admin', adminRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/ajw', userRoutes);
+app.use('/api/akw', userRoutes);
 
 // Server
 const PORT = process.env.PORT || 8000;
