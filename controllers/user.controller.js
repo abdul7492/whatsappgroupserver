@@ -23,7 +23,9 @@ export const submitEntry = async (req, res) => {
 export const getPlaninfo = async (req, res) => {
   try {
     const { amount } = req.params;
-    const planAmount = parseInt(amount);
+    const pAmount = parseInt(amount);
+
+    console.log("Plan:", pAmount);
 
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -32,14 +34,17 @@ export const getPlaninfo = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999);
 
     const entries = await User.find({
-      planAmount,
+      planAmount: pAmount,
       status: 'approved',
       date: { $gte: startOfDay, $lte: endOfDay }
     });
 
+
     const participantCount = entries.length;
-    const totalAmount = participantCount * planAmount;
+    const totalAmount = participantCount * pAmount;
     const payout = totalAmount * 0.975;
+    
+    console.log("Prticipent:", participantCount );
 
     res.json({ participantCount, totalAmount, payout });
   } catch (error) {
@@ -47,6 +52,7 @@ export const getPlaninfo = async (req, res) => {
     res.status(500).json({ error: 'Server error, could not fetch plan info.' });
   }
 };
+
 
     
   export const setwinners = async (req, res) => {
