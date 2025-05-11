@@ -37,6 +37,11 @@ const allowedOrigins = [
   'https://www.whatsappgrouplinks2025.snapmoviehd.com',
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://ajjkawinner.snapmoviehd.com',
+  'https://www.ajjkawinner.snapmoviehd.com',
+  'https://snapmoviehd.com',
+  'https://www.snapmoviehd.com',
+  
 ];
 
 // Middleware
