@@ -10,7 +10,7 @@ import { upload, handleMulterError } from '../middlewares/multer.middleware.js';
 
 const router = express.Router();
 
-router.get('/:amount', getPlaninfo);
+router.get('/info/:amount', getPlaninfo);
 
 router.get('/getwinners', getwinners );
 
