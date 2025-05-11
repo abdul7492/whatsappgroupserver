@@ -4,6 +4,7 @@ import {
     getPlaninfo,
     setwinner,
     getwinners,
+    deleteUser,
     getusers,
 
     rest,
@@ -22,7 +23,7 @@ router.post('/addentry', upload, handleMulterError, submitEntry);
 
 router.put('/setwinner/:id', setwinner);
 
-
+router.delete('/delete/:id', deleteUser);
 
 router.put('/reset', rest);
 
