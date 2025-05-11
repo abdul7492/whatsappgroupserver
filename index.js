@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/admin.routes.js';
 import itemRoutes from './routes/item.routes.js';
 import orderRoutes from './routes/order.routes.js';
+import userRoutes from './routes/user.routes.js';
 import axios from 'axios'; // Import axios for the reloadWebsite function
 
 dotenv.config();
@@ -65,6 +66,7 @@ mongoose
 app.use('/api/admin', adminRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/ajw', userRoutes);
 
 // Server
 const PORT = process.env.PORT || 8000;
