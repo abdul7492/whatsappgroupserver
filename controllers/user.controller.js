@@ -84,7 +84,7 @@ export const setwinner = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { isWinner: !user.isWinner },
-
+      { new: true }
     );
 
     res.json({
@@ -94,6 +94,35 @@ export const setwinner = async (req, res) => {
   } catch (error) {
     console.error('Error toggling winner status:', error);
     res.status(500).json({ error: 'Server error, could not toggle winner.' });
+  }
+};
+
+// Set status (pending / approved / cancelled)
+export const setStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    // Check if status is valid
+    const validStatuses = ['pending', 'approved', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status value.' });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    res.json({ message: 'Status updated successfully.', user: updatedUser });
+  } catch (error) {
+    console.error('Error updating status:', error);
+    res.status(500).json({ error: 'Server error, could not update status.' });
   }
 };
 
