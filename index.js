@@ -35,7 +35,8 @@ setInterval(reloadWebsite, interval);
 const allowedOrigins = [
   'https://whatsappgrouplinks2025.snapmoviehd.com',
   'https://www.whatsappgrouplinks2025.snapmoviehd.com',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://localhost:5173',
 ];
 
 // Middleware
