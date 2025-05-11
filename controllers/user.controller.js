@@ -34,6 +34,7 @@ export const getPlaninfo = async (req, res) => {
 
     const entries = await User.find({
       planAmount: pAmount,
+      status: { $in: ['approved', 'pending'] },
       date: { $gte: startOfDay, $lte: endOfDay }
     });
 
