@@ -9,7 +9,7 @@ export const submitEntry = async (req, res) => {
       planAmount: req.body.amount,
       easypaisaName: req.body.payname,
 
-      image1: imageUrls[0], 
+      image: imageUrls[0], 
     });
 
     await newUser.save();
