@@ -47,6 +47,7 @@ export const getPlaninfo = async (req, res) => {
     res.status(500).json({ error: 'Server error, could not fetch plan info.' });
   }
 };
+
     
   export const setwinners = async (req, res) => {
     try {
