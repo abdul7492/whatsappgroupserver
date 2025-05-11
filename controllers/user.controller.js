@@ -25,15 +25,10 @@ export const getPlaninfo = async (req, res) => {
     const { amount } = req.params;
     const pAmount = parseInt(amount);
 
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
 
     const entries = await User.find({
       planAmount: pAmount,
-      status: { $in: ['approved', 'pending'] },
+      status: 'approved',
       date: { $gte: startOfDay, $lte: endOfDay }
     });
 
@@ -41,6 +36,7 @@ export const getPlaninfo = async (req, res) => {
     const participantCount = entries.length;
     const totalAmount = participantCount * pAmount;
     const payout = totalAmount * 0.975;
+
 
     res.json({ participantCount, totalAmount, payout });
   } catch (error) {
@@ -51,37 +47,6 @@ export const getPlaninfo = async (req, res) => {
 
 
     
-  export const setwinners = async (req, res) => {
-    try {
-      const plans = [50, 100, 500, 1000];
-      const today = new Date().setHours(0, 0, 0, 0);
-  
-      const winners = [];
-  
-      for (let plan of plans) {
-        const entries = await User.find({
-          planAmount: plan,
-          status: 'approved',
-          date: today
-        });
-  
-        if (entries.length > 0) {
-          const randomIndex = Math.floor(Math.random() * entries.length);
-          const winner = entries[randomIndex];
-  
-          await User.findByIdAndUpdate(winner._id, { isWinner: true });
-  
-          winners.push({ planAmount: plan, winnerId: winner._id });
-        }
-      }
-  
-      res.json({ message: 'Winners selected', winners });
-    } catch (error) {
-      console.error('Error setting winners:', error);
-      res.status(500).json({ error: 'Server error, could not select winners.' });
-    }
-  };
-  
 
   export const getwinners = async (req, res) => {
     try {
@@ -98,6 +63,42 @@ export const getPlaninfo = async (req, res) => {
       res.status(500).json({ error: 'Server error, could not get winners.' });
     }
   };
+
+  export const getusers = async (req, res) => {
+    try {
+      const entries = await User.find().sort({ createdAt: -1 });
+      res.json(entries);
+    } catch (error) {
+      console.error('Error getting entries:', error);
+      res.status(500).json({ error: 'Server error, could not get entries.' });
+    }
+  };
+  
+export const setwinner = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    
+    const user = await User.findById(id);
+   
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { isWinner: !user.isWinner },
+      { new: true }
+    );
+
+    res.json({
+      message: `User ${updatedUser.isWinner ? 'set as winner' : 'unset as winner'}.`,
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error('Error toggling winner status:', error);
+    res.status(500).json({ error: 'Server error, could not toggle winner.' });
+  }
+};
+
+  
+ 
   
   export const rest = async (req, res) => {
     try {
@@ -105,7 +106,7 @@ export const getPlaninfo = async (req, res) => {
   
       await User.updateMany(
         { date: today },
-        { $set: { status: 'cancelled', isWinner: false } }
+        { $set: { status: 'cancelled'} }
       );
   
       res.json({ message: 'All entries reset for today.' });
