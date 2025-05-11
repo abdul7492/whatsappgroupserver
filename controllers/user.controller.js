@@ -84,7 +84,7 @@ export const setwinner = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { isWinner: !user.isWinner },
-      { new: true }
+
     );
 
     res.json({
