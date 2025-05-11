@@ -5,7 +5,7 @@ import {
     setwinner,
     getwinners,
     getusers,
-    setStatus,
+
     rest,
 } from '../controllers/user.controller.js'; 
 import { upload, handleMulterError } from '../middlewares/multer.middleware.js';
@@ -22,7 +22,7 @@ router.post('/addentry', upload, handleMulterError, submitEntry);
 
 router.put('/setwinner/:id', setwinner);
 
-router.put('/setstatus/:id', setStatus);
+
 
 router.put('/reset', rest);
 
