@@ -20,20 +20,21 @@ export const submitEntry = async (req, res) => {
   }
 };
 
-import { startOfDay, endOfDay } from 'date-fns'; // Make sure this import is present
-
 export const getPlaninfo = async (req, res) => {
   try {
     const { amount } = req.params;
     const pAmount = parseInt(amount);
 
-    const todayStart = startOfDay(new Date());
-    const todayEnd = endOfDay(new Date());
+    // Define the start and end of today
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
 
     const entries = await User.find({
       planAmount: pAmount,
-      status: { $in: ['approved', 'pending'] },
-      date: { $gte: todayStart, $lte: todayEnd }
+      date: { $gte: startOfDay, $lte: endOfDay }
     });
 
     const participantCount = entries.length;
@@ -46,6 +47,7 @@ export const getPlaninfo = async (req, res) => {
     res.status(500).json({ error: 'Server error, could not fetch plan info.' });
   }
 };
+
 
 
 
