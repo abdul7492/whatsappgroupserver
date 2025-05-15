@@ -60,7 +60,7 @@ export const getPlaninfo = async (req, res) => {
   
       const winners = await User.find({
         isWinner: true,
-        date: today
+        // date: today
       });
   
       res.json(winners);
