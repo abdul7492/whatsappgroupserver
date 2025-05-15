@@ -25,17 +25,17 @@ export const getPlaninfo = async (req, res) => {
     const { amount } = req.params;
     const pAmount = parseInt(amount);
 
-    // Define the start and end of today
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    // // Define the start and end of today
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    // const endOfDay = new Date();
+    // endOfDay.setHours(23, 59, 59, 999);
 
     const entries = await User.find({
       planAmount: pAmount,
       status: { $in: ['approved', 'pending'] },
-      date: { $gte: startOfDay, $lte: endOfDay }
+      // date: { $gte: startOfDay, $lte: endOfDay }
     });
 
     const participantCount = entries.length;
@@ -56,7 +56,7 @@ export const getPlaninfo = async (req, res) => {
 
   export const getwinners = async (req, res) => {
     try {
-      const today = new Date().setHours(0, 0, 0, 0);
+      // const today = new Date().setHours(0, 0, 0, 0);
   
       const winners = await User.find({
         isWinner: true,
@@ -105,10 +105,10 @@ export const setwinner = async (req, res) => {
   
   export const rest = async (req, res) => {
     try {
-      const today = new Date().setHours(0, 0, 0, 0);
+      // const today = new Date().setHours(0, 0, 0, 0);
   
       await User.updateMany(
-        { date: today },
+        // { date: today },
         { $set: { status: 'cancelled'} }
       );
   
