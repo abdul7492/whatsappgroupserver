@@ -80,28 +80,55 @@ export const getPlaninfo = async (req, res) => {
     }
   };
   
+// export const setwinner = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+    
+//     const user = await User.findById(id);
+   
+//     const updatedUser = await User.findByIdAndUpdate(
+//       id,
+//       { isWinner: !user.isWinner },
+//     );
+
+//     res.json({
+//       message: `User ${updatedUser.isWinner ? 'set as winner' : 'unset as winner'}.`,
+//       user: updatedUser
+//     });
+//   } catch (error) {
+//     console.error('Error toggling winner status:', error);
+//     res.status(500).json({ error: 'Server error, could not toggle winner.' });
+//   }
+// };  
+
 export const setwinner = async (req, res) => {
   try {
     const { id } = req.params;
+    const { planAmount } = req.body; // get amount from frontend
 
-    
     const user = await User.findById(id);
-   
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { isWinner: !user.isWinner },
+      { 
+        isWinner: !user.isWinner,
+        planAmount: planAmount !== undefined ? planAmount : user.planAmount
+      },
+      { new: true } // return updated doc
     );
 
     res.json({
-      message: `User ${updatedUser.isWinner ? 'set as winner' : 'unset as winner'}.`,
+      message: `User ${updatedUser.isWinner ? 'set as winner' : 'unset as winner'} with plan amount Rs. ${updatedUser.planAmount}.`,
       user: updatedUser
     });
   } catch (error) {
     console.error('Error toggling winner status:', error);
     res.status(500).json({ error: 'Server error, could not toggle winner.' });
   }
-};  
- 
+};
+
   
   export const rest = async (req, res) => {
     try {
