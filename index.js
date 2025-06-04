@@ -41,7 +41,8 @@ const allowedOrigins = [
   'https://www.ajjkawinner.snapmoviehd.com',
   'https://snapmoviehd.com',
   'https://www.snapmoviehd.com',
-  
+  'http://join.snapmoviehd.com',
+  'http://www.join.snapmoviehd.com',
 ];
 
 // Middleware
