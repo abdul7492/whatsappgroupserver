@@ -259,8 +259,8 @@ export const updateItem = async (req, res) => {
 
     const fullLink = req.body.whatsappgrouplink || existingItem.link;
 
-    // Extract group code
-    const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9]+)(\?|$)/);
+    // More accurate regex (supports hyphen, underscore)
+    const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9_-]+)(\?|$)/);
     const groupCode = groupCodeMatch ? groupCodeMatch[1] : existingItem.linkname;
 
     const updatedData = {
@@ -275,13 +275,13 @@ export const updateItem = async (req, res) => {
 
     const updatedItem = await Item.findByIdAndUpdate(id, updatedData, { new: true });
 
-    if (!updatedItem) return res.status(404).json({ message: 'Item not found' });
     res.status(200).json({ message: 'Item updated successfully', item: updatedItem });
   } catch (error) {
     console.error('Error updating item:', error);
     res.status(500).json({ error: 'Server error, could not update item.' });
   }
 };
+
 
 
 
