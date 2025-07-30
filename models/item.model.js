@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const itemSchema = new mongoose.Schema({
     name: { type: String, required: true },
     linkname: { type: String, unique: true, required: true },
-
+link: { type: String, required: true }, // full WhatsApp link
     price: { type: Number, min: 0 },
     fullprice: { type: Number, min: 0 },
     popularity: { type: Number, default: 1 },
