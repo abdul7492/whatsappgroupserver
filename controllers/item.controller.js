@@ -15,29 +15,52 @@ export const getItems = async (req, res) => {
 
 
 
+// export const getItem = async (req, res) => {
+//     try {
+//         const { lname } = req.params;
+//         const decodedLinkname = decodeURIComponent(lname); // Decode the linkname
+
+//         // Find the item by linkname (case-insensitive search)
+//         const item = await Item.findOne({ linkname: { $regex: decodedLinkname, $options: 'i' } });
+
+//         if (!item) {
+//             return res.status(404).json({ message: 'Item not found' });
+//         }
+
+//         // Increment popularity and save
+//         item.popularity += 1;
+//         await item.save();
+
+//         // Return the updated item
+//         res.status(200).json({ item });
+//     } catch (error) {
+//         console.error('Error fetching item:', error);
+//         res.status(500).json({ error: 'Server error, could not fetch item.' });
+//     }
+// };
+
 export const getItem = async (req, res) => {
     try {
-        const { lname } = req.params;
-        const decodedLinkname = decodeURIComponent(lname); // Decode the linkname
+        const { linkname } = req.body;
 
-        // Find the item by linkname (case-insensitive search)
-        const item = await Item.findOne({ linkname: { $regex: decodedLinkname, $options: 'i' } });
+        const item = await Item.findOne({
+            linkname: { $regex: linkname, $options: 'i' }
+        });
 
         if (!item) {
             return res.status(404).json({ message: 'Item not found' });
         }
 
-        // Increment popularity and save
         item.popularity += 1;
         await item.save();
 
-        // Return the updated item
         res.status(200).json({ item });
     } catch (error) {
         console.error('Error fetching item:', error);
         res.status(500).json({ error: 'Server error, could not fetch item.' });
     }
 };
+
 
 export const getsaleItem = async (req, res) => {
   try {
