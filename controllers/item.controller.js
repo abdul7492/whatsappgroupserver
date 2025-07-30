@@ -259,10 +259,17 @@ export const updateItem = async (req, res) => {
 
     const fullLink = req.body.whatsappgrouplink || existingItem.link;
 
-    // More accurate regex (supports hyphen, underscore)
-    const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9_-]+)(\?|$)/);
-    const groupCode = groupCodeMatch ? groupCodeMatch[1] : existingItem.linkname;
+    // // More accurate regex (supports hyphen, underscore)
+    // const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9_-]+)(\?|$)/);
+    // const groupCode = groupCodeMatch ? groupCodeMatch[1] : existingItem.linkname;
+// Extract group code from full WhatsApp URL
+    const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9]+)(\?|$)/);
+    const groupCode = groupCodeMatch ? groupCodeMatch[1] : null;
 
+    if (!groupCode) {
+      return res.status(400).json({ message: 'Invalid WhatsApp group link format' });
+    }
+    
     const updatedData = {
       name: req.body.name || existingItem.name,
       linkname: groupCode,
