@@ -6,7 +6,7 @@ const itemSchema = new mongoose.Schema({
 
     price: { type: Number, min: 0 },
     fullprice: { type: Number, min: 0 },
-    popularity: { type: Number, default: 0 },
+    popularity: { type: Number, default: 1 },
     rating: { type: Number, min: 0, max: 5, default: 0 },
     size: [{ type: String}],
     fits: {type: String, enum: ['XS','Small', 'Medium', 'Large', 'XL']},
