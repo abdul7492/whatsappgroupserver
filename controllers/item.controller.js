@@ -41,10 +41,11 @@ export const getItems = async (req, res) => {
 
 export const getItem = async (req, res) => {
     try {
-        const { linkname } = req.body;
+        const { linkname } = req.query;
+        const decodedLink = decodeURIComponent(linkname);
 
         const item = await Item.findOne({
-            linkname: { $regex: linkname, $options: 'i' }
+            linkname: { $regex: decodedLink, $options: 'i' }
         });
 
         if (!item) {
@@ -60,6 +61,7 @@ export const getItem = async (req, res) => {
         res.status(500).json({ error: 'Server error, could not fetch item.' });
     }
 };
+
 
 
 export const getsaleItem = async (req, res) => {
