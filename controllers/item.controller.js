@@ -244,32 +244,34 @@ export const updateItem = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Validate item existence
+    const existingItem = await Item.findById(id);
+    if (!existingItem) return res.status(404).json({ message: 'Item not found' });
+
+    // Validate category
     const categoryDoc = await Category.findOne({ name: req.body.category });
     if (!categoryDoc) {
       return res.status(400).json({ message: 'Category not found' });
     }
 
-    const existingItem = await Item.findById(id);
-    if (!existingItem) return res.status(404).json({ message: 'Item not found' });
-
+    // Image upload
     let imageUrls = [];
     if (req.files && req.files.length > 0) {
       imageUrls = await uploadMultipleToCloudinary(req.files.map(file => file.path));
     }
 
+    // Use provided link or fallback to existing one
     const fullLink = req.body.whatsappgrouplink || existingItem.link;
 
-    // // More accurate regex (supports hyphen, underscore)
-    // const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9_-]+)(\?|$)/);
-    // const groupCode = groupCodeMatch ? groupCodeMatch[1] : existingItem.linkname;
-// Extract group code from full WhatsApp URL
-    const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9]+)(\?|$)/);
+    // Extract group code (linkname)
+    const groupCodeMatch = fullLink.match(/\/([a-zA-Z0-9_-]+)(\?|$)/);
     const groupCode = groupCodeMatch ? groupCodeMatch[1] : null;
 
     if (!groupCode) {
       return res.status(400).json({ message: 'Invalid WhatsApp group link format' });
     }
-    
+
+    // Build updated object
     const updatedData = {
       name: req.body.name || existingItem.name,
       linkname: groupCode,
@@ -283,6 +285,7 @@ export const updateItem = async (req, res) => {
     const updatedItem = await Item.findByIdAndUpdate(id, updatedData, { new: true });
 
     res.status(200).json({ message: 'Item updated successfully', item: updatedItem });
+
   } catch (error) {
     console.error('Error updating item:', error);
     res.status(500).json({ error: 'Server error, could not update item.' });
